@@ -1,0 +1,11 @@
+FROM python:3.12-slim
+
+WORKDIR /app
+
+RUN pip install -i https://mirrors.aliyun.com/pypi/simple \
+    loguru \
+    numpy
+
+ADD test.py /app/test.py
+
+CMD ["python3", "/app/test.py"]
