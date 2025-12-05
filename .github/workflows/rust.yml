@@ -1,0 +1,36 @@
+name: Build
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build-all-targets:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        target: [x86_64-unknown-linux-musl, aarch64-unknown-linux-musl, x86_64-pc-windows-gnu]
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Rust
+        uses: rust-lang/setup-rust-action@v1
+        with:
+          toolchain: stable
+          components: rustfmt, clippy
+      
+      - name: Install Cross
+        run: cargo install cross --locked
+      
+      - name: Build with Cross
+        run: |
+          cross build --target ${{ matrix.target }} --release
+          echo "Built for ${{ matrix.target }}"
+      
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.target }}
+          path: target/${{ matrix.target }}/release/docker-image-patcher
