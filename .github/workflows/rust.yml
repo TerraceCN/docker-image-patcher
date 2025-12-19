@@ -15,11 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
-      - name: Setup Rust
-        uses: rust-lang/setup-rust-action@v1
-        with:
-          toolchain: stable
-          components: rustfmt, clippy
+      - uses: dtolnay/rust-toolchain@master
       
       - name: Install Cross
         run: cargo install cross --locked
