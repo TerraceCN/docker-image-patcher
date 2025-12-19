@@ -27,7 +27,15 @@ jobs:
           cross build --target ${{ matrix.target }} --release
           echo "Built for ${{ matrix.target }}"
       
-      - name: Upload artifact
+      - name: Upload artifact (Windows)
+        if: ${{ matrix.target == 'x86_64-pc-windows-gnu' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-image-patcher-${{ matrix.target }}
+          path: target/${{ matrix.target }}/release/docker-image-patcher.exe
+
+      - name: Upload artifact (other)
+        if: ${{ matrix.target != 'x86_64-pc-windows-gnu' }}
         uses: actions/upload-artifact@v4
         with:
           name: docker-image-patcher-${{ matrix.target }}
